@@ -1,5 +1,8 @@
-import React , { useState }  from 'react'
+import { useState }  from 'react'
 import { createUserAccount } from '../../../src/lib/appwrite/api'
+
+import '../../../src/Style/SignUpForm.css'
+import { userCreateUserMutationAccount } from '../../lib/appwrite/react-query/reactqueryandmutationas';
 
 
 const SignUpForm = () => {
@@ -7,10 +10,15 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
+  const {mutateAsync: createUserAccount, isLoading} = userCreateUserMutationAccount()
+
   async function handleSignUpForm() {
     try {
       const newUser = await createUserAccount({ email, password, name,  username: name });
       console.log("User created:", newUser);
+      if(!newUser) {
+        return;
+      }
     } catch (error) {
       console.error("Sign up failed:", error);
     }
