@@ -1,14 +1,24 @@
 import {
-  useQuery,
+  // useQuery,
   useMutation,
-  useQueryClient,
-  useInFiniteQuery
+  // useQueryClient,
+  // useInFiniteQuery
 } from '@tanstack/react-query'
-import type { INewuser } from '../../../types'
-import { createUserAccount } from '../api'
+import type { INewUser } from '../../../types'
+import { createUserAccount, signInAccount } from '../api'
 
-export const userCreateUserMutationAccount = () => {
+
+
+// Hook to create user
+export const useCreateUserAccount = () => {
   return useMutation({
-    mutationFn: (user: INewuser) => createUserAccount(user)
+    mutationFn: (user: INewUser) => createUserAccount(user),
+  })
+}
+
+// Hook to sign in user
+export const useSignInAccount = () => {
+  return useMutation({
+    mutationFn: (user: { email: string, password: string }) => signInAccount(user),
   })
 }

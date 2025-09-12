@@ -1,26 +1,55 @@
-import { useState }  from 'react'
-import { createUserAccount } from '../../../src/lib/appwrite/api'
-
-import '../../../src/Style/SignUpForm.css'
-import { userCreateUserMutationAccount } from '../../lib/appwrite/react-query/reactqueryandmutationas';
-
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../../../src/Style/SignUpForm.css";
+import {
+  useCreateUserAccount,
+  useSignInAccount,
+} from "../../lib/appwrite/react-query/reactqueryandmutationas";
+import { useUserContext } from "../../context/AuthContext";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  const {mutateAsync: createUserAccount, isLoading} = userCreateUserMutationAccount()
+  const { mutateAsync: createUserAccountMutation, isLoading: isCreatingAccount } =
+    useCreateUserAccount();
+  const { mutateAsync: createSignInAccountMutation, isLoading: isSignIn } =
+    useSignInAccount();
+  const { checkAuthUser, isLoading: userLoading } = useUserContext();
+  const navigate = useNavigate(); // ✅ Fixed
 
   async function handleSignUpForm() {
     try {
-      const newUser = await createUserAccount({ email, password, name,  username: name });
+      // Create user account
+      const newUser = await createUserAccountMutation({
+        email,
+        password,
+        name,
+        username: name,
+      });
       console.log("User created:", newUser);
-      if(!newUser) {
-        return;
+
+      if (!newUser) return;
+
+      // Sign in user after signup
+      await createSignInAccountMutation({ email, password });
+
+      // Check auth
+      const isLoggedIn = await checkAuthUser();
+
+      if (isLoggedIn) {
+        // Reset inputs
+        setEmail("");
+        setPassword("");
+        setName("");
+
+        navigate("/"); // redirect to home
+      } else {
+        console.error("Login failed");
       }
     } catch (error) {
-      console.error("Sign up failed:", error);
+      console.error("Error signing up:", error);
     }
   }
 
@@ -48,7 +77,9 @@ const SignUpForm = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <br />
-      <button onClick={handleSignUpForm}>Sign Up</button>
+      <button onClick={handleSignUpForm} disabled={isCreatingAccount || isSignIn || userLoading}>
+        {isCreatingAccount || isSignIn ? "Loading..." : "Sign Up"}
+      </button>
     </div>
   );
 };
