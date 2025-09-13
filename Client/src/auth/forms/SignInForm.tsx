@@ -13,40 +13,30 @@ const SignInForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const signIn = useSignInAccount(); // ✅ mutation hook
+  const signIn = useSignInAccount();
 
-  async function handleSignInForm() {
-    try {
-      setIsSubmitting(true);
+async function handleSignInForm() {
+  try {
+    setIsSubmitting(true);
 
-      await signIn.mutateAsync({ email, password });
+    await signIn.mutateAsync({ email, password });
+    await checkAuthUser(); 
 
-      const isLoggedIn = await checkAuthUser();
-      console.log("checkAuthUser returned:", isLoggedIn);
-
-      if (isLoggedIn) {
-        setEmail("");
-        setPassword("");
-        navigate("/");
-      } else {
-        console.error("Login failed");
-      }
-    } catch (error: unknown) {
-      // ✅ safer error handling
-      if (error instanceof AppwriteException) {
-        console.error("Appwrite error:", error.message);
-        alert(error.message);
-      } else if (error instanceof Error) {
-        console.error("Error signing in:", error.message);
-        alert(error.message);
-      } else {
-        console.error("Unknown error:", error);
-        alert("Something went wrong");
-      }
-    } finally {
-      setIsSubmitting(false);
+    // navigate after successful sign-in
+    navigate("/");
+  } catch (error: unknown) {
+    if (error instanceof AppwriteException) {
+      alert(error.message);
+    } else if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      alert("Something went wrong");
     }
+  } finally {
+    setIsSubmitting(false);
   }
+}
+
 
   return (
     <div>
