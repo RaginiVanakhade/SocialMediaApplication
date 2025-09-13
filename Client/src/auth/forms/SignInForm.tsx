@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../Style/SignInForm.css";
-import { signInAccount } from "../../lib/appwrite/api";
+import { useSignInAccount } from "../../lib/appwrite/react-query/reactqueryandmutationas"; 
 import { useUserContext } from "../../context/AuthContext";
+import { AppwriteException } from "appwrite"; // ✅ for proper error typing
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
@@ -12,13 +13,16 @@ const SignInForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  const signIn = useSignInAccount(); // ✅ mutation hook
+
   async function handleSignInForm() {
     try {
       setIsSubmitting(true);
 
-      await signInAccount({ email, password });
+      await signIn.mutateAsync({ email, password });
 
       const isLoggedIn = await checkAuthUser();
+      console.log("checkAuthUser returned:", isLoggedIn);
 
       if (isLoggedIn) {
         setEmail("");
@@ -27,8 +31,18 @@ const SignInForm = () => {
       } else {
         console.error("Login failed");
       }
-    } catch (error) {
-      console.error("Error signing in:", error);
+    } catch (error: unknown) {
+      // ✅ safer error handling
+      if (error instanceof AppwriteException) {
+        console.error("Appwrite error:", error.message);
+        alert(error.message);
+      } else if (error instanceof Error) {
+        console.error("Error signing in:", error.message);
+        alert(error.message);
+      } else {
+        console.error("Unknown error:", error);
+        alert("Something went wrong");
+      }
     } finally {
       setIsSubmitting(false);
     }

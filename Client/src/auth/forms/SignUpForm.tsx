@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../src/Style/SignUpForm.css";
-import { createUserAccount, signInAccount } from "../../lib/appwrite/api";
+import { useCreateUserAccount, useSignInAccount } from "../../lib/appwrite/react-query/reactqueryandmutationas"
 import { useUserContext } from "../../context/AuthContext";
 
 const SignUpForm = () => {
@@ -13,18 +13,22 @@ const SignUpForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  const createUser = useCreateUserAccount();
+  const signIn = useSignInAccount();
+
   async function handleSignUpForm() {
     try {
       setIsSubmitting(true);
 
       // Create user account
-      await createUserAccount({ email, password, name, username: name });
+      await createUser.mutateAsync({ email, password, name, username: name });
 
       // Sign in user after signup
-      await signInAccount({ email, password });
+      await signIn.mutateAsync({ email, password });
 
       // Check auth
       const isLoggedIn = await checkAuthUser();
+      console.log("CheckAuthUser result:", isLoggedIn);
 
       if (isLoggedIn) {
         setEmail("");
