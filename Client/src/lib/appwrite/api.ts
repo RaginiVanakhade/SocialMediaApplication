@@ -1,9 +1,11 @@
 import type { INewUser } from "../../types";
-import { account, appwriteConfig, avatars, databases } from "./config";
-import { ID , Query } from "appwrite";
+import { account, avatars, databases, appwriteConfig } from "./config";
+import { ID, Query } from "appwrite";
 
+// ✅ Create User Account
 export async function createUserAccount(user: INewUser) {
   try {
+    // 1. Create Auth account
     const newAccount = await account.create(
       ID.unique(),
       user.email,
@@ -13,75 +15,80 @@ export async function createUserAccount(user: INewUser) {
 
     if (!newAccount) throw new Error("Account creation failed");
 
+    // 2. Auto login user after sign up
+    await signInAccount({ email: user.email, password: user.password });
+
+    // 3. Create avatar
     const avatarUrl = avatars.getInitials(user.name);
 
-    const newUser = await saveUserToDB({
-      accountId: newAccount.$id,
-      name: newAccount.name,
-      email: newAccount.email,
-      username: user.username,
-      imageUrl: avatarUrl,
-    });
-
-    return { account: newAccount, profile: newUser };
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return { success: false, error };
-  }
-}
-
-export async function saveUserToDB(user: {
-  accountId: string;
-  email: string;
-  name: string;
-  imageUrl: string; // changed from URL
-  username?: string;
-}) {
-  try {
+    // 4. Save user profile in DB (permissions handled automatically via logged-in user)
     const newUser = await databases.createDocument(
       appwriteConfig.databaseid,
       appwriteConfig.usercollectionid,
       ID.unique(),
-      user
+      {
+        accountId: newAccount.$id,
+        name: newAccount.name,
+        email: newAccount.email,
+        username: user.username,
+        imageUrl: avatarUrl.toString(),
+      }
     );
 
-    return newUser;
+    return { account: newAccount, profile: newUser };
   } catch (error) {
-    console.error("Error saving user to DB:", error);
+    console.error("Error creating user:", error);
     throw error;
   }
 }
 
-export async function signInAccount(user: {email: string, password: string}) {
+// ✅ Sign In
+export async function signInAccount(user: { email: string; password: string }) {
   try {
+    // check if already logged in
+    const current = await account.get().catch(() => null);
 
-    const session = await account.createSession(user.email, user.password)
-    return session
+    if (current) {
+      // already signed in, just return current session
+      return current;
+    }
 
+    // otherwise create session
+    return await account.createEmailPasswordSession(
+      user.email,
+      user.password
+    );
   } catch (error) {
-    console.log(error)
+    console.error("Error signing in:", error);
+    throw error;
   }
-  
 }
 
-// ============================== GET ACCOUNT
+
+// ✅ Sign Out
+export async function signOutAccount() {
+  try {
+    return await account.deleteSession("current");
+  } catch (error) {
+    console.error("Error signing out:", error);
+    throw error;
+  }
+}
+
+// ✅ Get Current Account
 export async function getAccount() {
   try {
-    const currentAccount = await account.get();
-
-    return currentAccount;
-  } catch (error) {
-    console.log(error);
+    return await account.get();
+  } catch {
+    return null;
   }
 }
 
-
-// ============================== GET USER
+// ✅ Get Current User Profile
 export async function getCurrentUser() {
   try {
     const currentAccount = await getAccount();
-
-    if (!currentAccount) throw Error;
+    if (!currentAccount) return null;
 
     const currentUser = await databases.listDocuments(
       appwriteConfig.databaseid,
@@ -89,11 +96,9 @@ export async function getCurrentUser() {
       [Query.equal("accountId", currentAccount.$id)]
     );
 
-    if (!currentUser) throw Error;
-
     return currentUser.documents[0];
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching current user:", error);
     return null;
   }
 }

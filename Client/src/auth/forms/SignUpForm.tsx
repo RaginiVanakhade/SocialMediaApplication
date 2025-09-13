@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../../src/Style/SignUpForm.css";
-import {
-  useCreateUserAccount,
-  useSignInAccount,
-} from "../../lib/appwrite/react-query/reactqueryandmutationas";
+import { createUserAccount, signInAccount } from "../../lib/appwrite/api";
 import { useUserContext } from "../../context/AuthContext";
 
 const SignUpForm = () => {
@@ -12,44 +9,35 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  const { mutateAsync: createUserAccountMutation, isLoading: isCreatingAccount } =
-    useCreateUserAccount();
-  const { mutateAsync: createSignInAccountMutation, isLoading: isSignIn } =
-    useSignInAccount();
   const { checkAuthUser, isLoading: userLoading } = useUserContext();
-  const navigate = useNavigate(); // ✅ Fixed
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   async function handleSignUpForm() {
     try {
-      // Create user account
-      const newUser = await createUserAccountMutation({
-        email,
-        password,
-        name,
-        username: name,
-      });
-      console.log("User created:", newUser);
+      setIsSubmitting(true);
 
-      if (!newUser) return;
+      // Create user account
+      await createUserAccount({ email, password, name, username: name });
 
       // Sign in user after signup
-      await createSignInAccountMutation({ email, password });
+      await signInAccount({ email, password });
 
       // Check auth
       const isLoggedIn = await checkAuthUser();
 
       if (isLoggedIn) {
-        // Reset inputs
         setEmail("");
         setPassword("");
         setName("");
-
-        navigate("/"); // redirect to home
+        navigate("/");
       } else {
         console.error("Login failed");
       }
     } catch (error) {
       console.error("Error signing up:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -77,8 +65,8 @@ const SignUpForm = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <br />
-      <button onClick={handleSignUpForm} disabled={isCreatingAccount || isSignIn || userLoading}>
-        {isCreatingAccount || isSignIn ? "Loading..." : "Sign Up"}
+      <button onClick={handleSignUpForm} disabled={isSubmitting || userLoading}>
+        {isSubmitting || userLoading ? "Loading..." : "Sign Up"}
       </button>
     </div>
   );
