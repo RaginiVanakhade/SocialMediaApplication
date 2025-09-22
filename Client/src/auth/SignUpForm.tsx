@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../../src/Style/SignUpForm.css";
-import { useCreateUserAccount, useSignInAccount } from "../../lib/appwrite/react-query/reactqueryandmutationas"
-import { useUserContext } from "../../context/AuthContext";
+import "../Style/SignUpForm.css";
+import { useCreateUserAccount, useSignInAccount } from "../appwrite/react-query/reactqueryandmutationas"
+import { useUserContext } from "../context/AuthContext";
 
 const SignUpForm = () => {
   const [email, setEmail] = useState("");

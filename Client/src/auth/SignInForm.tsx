@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../../Style/SignInForm.css";
-import { useSignInAccount } from "../../lib/appwrite/react-query/reactqueryandmutationas"; 
-import { useUserContext } from "../../context/AuthContext";
+import "../Style/SignInForm.css";
+import { useSignInAccount } from "../appwrite/react-query/reactqueryandmutationas"; 
+import { useUserContext } from "../context/AuthContext";
 import { AppwriteException } from "appwrite"; // ✅ for proper error typing
 
 const SignInForm = () => {

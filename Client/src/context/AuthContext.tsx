@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { IUser } from "../types";
-import { getCurrentUser, signOutAccount } from "../lib/appwrite/api";
+import { getCurrentUser, signOutAccount } from "../appwrite/api";
 
 export const INITIAL_USER: IUser = {
   id: "",

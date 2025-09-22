@@ -1,10 +1,10 @@
 import { Link , useNavigate} from "react-router-dom";
-import { useSignInAccount } from "../lib/appwrite/react-query/reactqueryandmutationas";
+import { useSignInAccount } from "../appwrite/react-query/reactqueryandmutationas";
 import { useEffect } from "react";
 import { useUserContext } from "../context/AuthContext";
 
 const SideBar = () => {
-  const {mutate : signOUt, isSuccess} = useSignInAccount()
+  const { isSuccess} = useSignInAccount()
   const navigate = useNavigate()
   const { user } = useUserContext()
   // const handleLogOut = () => {
