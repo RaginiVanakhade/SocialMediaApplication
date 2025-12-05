@@ -1,6 +1,8 @@
 import React from "react";
 import { FaStar } from "react-icons/fa";
-import "../Style/ProductCart.css"
+import "../Style/ProductCart.css";
+import { addToCart } from "../redux/CardSlice";
+import { useDispatch } from "react-redux";
 
 interface Product {
   id: number;
@@ -16,17 +18,36 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const dispatch = useDispatch();
+
+  // Correctly typed handler
+  const handleAddToCart = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    product: Product
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
+    dispatch(addToCart(product));
+    alert("Product Added to cart Successfully!");
+  };
+
   return (
     <div className="product-card">
       <img src={product.image} alt={product.name} />
+      
       <h3>{product.name}</h3>
       <p>${product.price}</p>
+
       <div className="rating">
         {Array.from({ length: product.rating ?? 4 }).map((_, idx) => (
           <FaStar key={idx} />
         ))}
       </div>
-      <div className="add-to-cart">
+
+      <div
+        className="add-to-cart"
+        onClick={(e) => handleAddToCart(e, product)}
+      >
         <span>+</span>
         <span>Add to Cart</span>
       </div>

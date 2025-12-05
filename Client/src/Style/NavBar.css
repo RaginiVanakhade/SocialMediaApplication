@@ -12,7 +12,7 @@ nav {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-nav > div {
+nav > .navbar-top {
   max-width: 1250px;
   margin: auto;
   display: flex;
@@ -30,25 +30,33 @@ nav a {
   color: #333;
 }
 
-nav > div > div:first-child a {
+nav .logo a {
   font-size: 28px;
   font-weight: 700;
-  color: #ff6600;
+  color: #990808;
+  letter-spacing: 1px;
 }
 
 /* =========================
    SEARCH BAR
 ========================= */
-nav form {
+nav .search form {
   display: flex;
   align-items: center;
-  background: #f1f1f1;
+  background: #f9f9f9;
   padding: 6px 12px;
   border-radius: 30px;
   width: 350px;
+  transition: all 0.3s ease;
+  border: 1px solid #ddd;
 }
 
-nav form input {
+nav .search form:focus-within {
+  border-color: #7d0b0b;
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.2);
+}
+
+nav .search form input {
   border: none;
   outline: none;
   background: transparent;
@@ -57,77 +65,111 @@ nav form input {
   margin-right: 10px;
 }
 
-nav form svg {
+nav .search form button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+nav .search form svg {
   font-size: 18px;
   color: #555;
-  cursor: pointer;
 }
 
 /* =========================
    CART, LOGIN & USER ICON
 ========================= */
-nav > div > div:nth-child(3) {
+nav .user-cart {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-nav > div > div:nth-child(3) svg {
+nav .user-cart svg {
   font-size: 22px;
   color: #333;
+  transition: color 0.3s ease;
 }
 
-nav > div > div:nth-child(3) button {
+nav .user-cart svg:hover {
+  color: #7d0b0b;
+}
+
+nav .user-cart button {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 15px;
   padding: 5px 10px;
+  transition: color 0.3s ease;
 }
 
-nav > div > div:nth-child(3) button:hover {
-  color: #ff6600;
+nav .user-cart button:hover {
+  color: #7d0b0b;
+}
+
+.cart-icon {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #7d0b0b;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-weight: bold;
 }
 
 /* =========================
    NAV LINKS
 ========================= */
-nav > div > div:nth-child(4) {
+nav .navbar-links {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
+  margin-top: 10px;
 }
 
-nav > div > div:nth-child(4) a {
+nav .navbar-links a {
   font-size: 16px;
   font-weight: 500;
   color: #444;
+  transition: color 0.3s ease;
 }
 
-nav > div > div:nth-child(4) a:hover {
-  color: #ff6600;
+nav .navbar-links a:hover {
+  color: #7d0b0b;
 }
 
 /* =========================
    RESPONSIVE DESIGN
 ========================= */
 @media (max-width: 900px) {
-  nav form {
+  nav .search form {
     width: 250px;
   }
 }
 
 @media (max-width: 700px) {
-  nav > div {
+  nav > .navbar-top {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
 
-  nav form {
+  nav .search form {
     width: 100%;
   }
 
-  nav > div > div:nth-child(4) {
+  nav .navbar-links {
     width: 100%;
     justify-content: space-between;
   }
