@@ -1,0 +1,114 @@
+/* Container for multiple product cards */
+.product-card-container {
+  display: flex;
+  flex-wrap: wrap; /* allows cards to move to next row if needed */
+  justify-content: space-evenly; /* evenly space cards */
+  gap: 16px; /* spacing between cards */
+  margin-top: 20px;
+}
+
+/* Individual product card */
+.product-card { 
+  width: 220px; /* slightly reduced width */
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: #fff;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Hover effect for card */
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Product image */
+.product-card img {
+  width: 100%;
+  height: 180px; /* slightly reduced height */
+  object-fit: cover;
+}
+
+/* Product title */
+.product-card h3 {
+  font-size: 1.1rem;
+  margin: 10px;
+  color: #333;
+}
+
+/* Product price */
+.product-card p {
+  font-size: 1rem;
+  margin: 0 10px 10px 10px;
+  color: #555;
+  font-weight: bold;
+}
+
+/* Rating stars */
+.product-card .rating {
+  display: flex;
+  align-items: center;
+  margin: 0 10px 10px 10px;
+  color: #f5a623; /* star color */
+}
+
+/* Add to Cart button - right aligned, rounded, red */
+.product-card .add-to-cart {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* align right */
+  gap: 8px;
+  background-color: #ff3b2e; /* red color */
+  color: #fff;
+  font-weight: bold;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 20px; /* rounded button */
+  margin: 10px; /* spacing from card edges */
+  border: none; /* remove top border */
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Add to Cart hover */
+.product-card .add-to-cart:hover {
+  background-color: #e23224; /* darker red on hover */
+  transform: scale(1.05); /* slight pop effect */
+}
+
+/* Plus sign inside Add to Cart */
+.product-card .add-to-cart span:first-child {
+  font-size: 1.2rem;
+}
+
+/* Responsive: make cards smaller on tablets */
+@media (max-width: 768px) {
+  .product-card-container {
+    justify-content: center;
+  }
+
+  .product-card {
+    width: 45%; /* two cards per row on tablets */
+    margin-bottom: 16px;
+  }
+
+  .product-card img {
+    height: 160px;
+  }
+}
+
+/* Responsive: make cards full width on mobile */
+@media (max-width: 480px) {
+  .product-card {
+    width: 90%; /* one card per row on mobile */
+  }
+
+  .product-card img {
+    height: 150px;
+  }
+}
