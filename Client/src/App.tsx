@@ -9,6 +9,7 @@ import HomePg from "./pages/HomePg";
 import Shop from "./pages/Shop";
 import Footer from "../src/components/Footer"
 import Cart from "./pages/Cart";
+import CheckoutPg from "./pages/CheckoutPg";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route index element={<HomePg />} /> 
             <Route path="/shop" element={<Shop />} /> 
             <Route path="/cart" element={<Cart />} /> 
+            <Route path="/checkout" element={<CheckoutPg />} /> 
           <Route path="/sign-in" element={<SignInForm />} />
           <Route path="/sign-up" element={<SignUpForm />} />
       </Routes>

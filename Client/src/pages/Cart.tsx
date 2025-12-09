@@ -6,6 +6,7 @@ import Modal from "../components/Modal";
 import ChangeAdd from "../components/ChangeAdd";
 import { useDispatch } from "react-redux";
 import { removeFromCart, increaseQuantity, decreaseQuantity } from "../redux/CardSlice";
+import { useNavigate } from "react-router-dom";
 
 // ---- Types ----
 interface CartProduct {
@@ -26,7 +27,7 @@ const Cart = () => {
   const cart = useSelector((state: { cart: CartState }) => state.cart);
   const [isModelOpen, setIsModelOpen] = useState(false);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate()
   // Address state
   const [address, setAddress] = useState("Your Address");
 
@@ -110,7 +111,7 @@ const Cart = () => {
                 <span>${cart.totalPrice.toFixed(2)}</span>
               </div>
 
-              <button className="checkout-btn">Proceed to Checkout</button>
+              <button className="checkout-btn" onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
             </div>
           </div>
 

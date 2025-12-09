@@ -1,0 +1,104 @@
+.checkout-page {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.left-side {
+  flex: 2;
+}
+
+.right-side {
+  flex: 1;
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.main-section {
+  background-color: #fff;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.section-header h3 {
+  margin: 0;
+}
+
+.section-form {
+  padding: 15px 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+/* Payment Section Styling */
+.section-form .payment-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.section-form .payment-option:hover {
+  background-color: #f0f8ff;
+  border-color: #007BFF;
+}
+
+.section-form .payment-option.selected {
+  background-color: #e6f0ff;
+  border-color: #007BFF;
+}
+
+.section-form .payment-option input[type="radio"] {
+  accent-color: #007BFF;
+  width: 18px;
+  height: 18px;
+}
+
+.section-form .payment-option label {
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
