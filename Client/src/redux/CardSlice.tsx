@@ -1,18 +1,37 @@
-import { createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import  type { Product, CartState } from "../types/cardslice";
+
+// ---- Types ----
+export interface CartProduct {
+  id: number;
+  title: string;
+  img: string;
+  price: number;
+  quantity: number;
+  totalPrice: number;
+}
+
+export interface CartState {
+  products: CartProduct[];
+  totalPrice: number;
+  totalQuantity: number;
+}
 
 const initialState: CartState = {
   products: [],
-  totalQuantity: 0,
   totalPrice: 0,
+  totalQuantity: 0,
 };
 
 const CartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<Omit<Product, "quantity" | "totalPrice">>) {
+    // Add product (quantity & totalPrice are created here)
+    addToCart(
+      state,
+      action: PayloadAction<Omit<CartProduct, "quantity" | "totalPrice">>
+    ) {
       const newItem = action.payload;
 
       const existingItem = state.products.find(
@@ -30,11 +49,57 @@ const CartSlice = createSlice({
         });
       }
 
-      state.totalPrice += newItem.price;
       state.totalQuantity++;
+      state.totalPrice += newItem.price;
+    },
+
+    // Remove product completely
+    removeFromCart(state, action: PayloadAction<number>) {
+      const id = action.payload;
+
+      const item = state.products.find((item) => item.id === id);
+      if (!item) return;
+
+      state.totalQuantity -= item.quantity;
+      state.totalPrice -= item.totalPrice;
+      state.products = state.products.filter((item) => item.id !== id);
+    },
+
+    // Increase quantity
+    increaseQuantity(state, action: PayloadAction<number>) {
+      const id = action.payload;
+
+      const item = state.products.find((item) => item.id === id);
+      if (!item) return;
+
+      item.quantity++;
+      item.totalPrice += item.price;
+      state.totalQuantity++;
+      state.totalPrice += item.price;
+    },
+
+    // Decrease quantity or remove when reaches zero
+    decreaseQuantity(state, action: PayloadAction<number>) {
+      const id = action.payload;
+
+      const item = state.products.find((item) => item.id === id);
+      if (!item) return;
+
+      if (item.quantity > 1) {
+        item.quantity--;
+        item.totalPrice -= item.price;
+        state.totalQuantity--;
+        state.totalPrice -= item.price;
+      } else {
+        state.totalQuantity--;
+        state.totalPrice -= item.price;
+        state.products = state.products.filter((p) => p.id !== id);
+      }
     },
   },
 });
 
-export const { addToCart } = CartSlice.actions;
+export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } =
+  CartSlice.actions;
+
 export default CartSlice.reducer;

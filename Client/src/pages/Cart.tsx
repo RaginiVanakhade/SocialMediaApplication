@@ -4,8 +4,10 @@ import "../Style/Cart.css";
 import { useState } from "react";
 import Modal from "../components/Modal";
 import ChangeAdd from "../components/ChangeAdd";
+import { useDispatch } from "react-redux";
+import { removeFromCart, increaseQuantity, decreaseQuantity } from "../redux/CardSlice";
 
-// ---- Added Types ----
+// ---- Types ----
 interface CartProduct {
   id: number;
   title: string;
@@ -17,20 +19,22 @@ interface CartProduct {
 interface CartState {
   products: CartProduct[];
   totalPrice: number;
+  totalQuantity: number; // make sure this exists
 }
 
 const Cart = () => {
   const cart = useSelector((state: { cart: CartState }) => state.cart);
-
   const [isModelOpen, setIsModelOpen] = useState(false);
+  const dispatch = useDispatch();
 
-  // NEW: Address state
+  // Address state
   const [address, setAddress] = useState("Your Address");
 
   return (
     <div className="cart-container">
       {cart?.products?.length > 0 ? (
         <div className="cart-wrapper">
+
           {/* LEFT — PRODUCTS */}
           <div className="cart-left">
             <h3>SHOPPING CART</h3>
@@ -54,9 +58,9 @@ const Cart = () => {
                     <p className="item-price">${product.price.toFixed(2)}</p>
 
                     <div className="quantity">
-                      <button>-</button>
+                      <button onClick={() => dispatch(decreaseQuantity(product.id))}>-</button>
                       <p>{product.quantity}</p>
-                      <button>+</button>
+                      <button onClick={() => dispatch(increaseQuantity(product.id))}>+</button>
                     </div>
                   </div>
 
@@ -64,7 +68,10 @@ const Cart = () => {
                     ${(product.quantity * product.price).toFixed(2)}
                   </p>
 
-                  <button className="remove-btn">
+                  <button
+                    className="remove-btn"
+                    onClick={() => dispatch(removeFromCart(product.id))}
+                  >
                     <FaTrashAlt />
                   </button>
                 </div>
@@ -76,6 +83,12 @@ const Cart = () => {
           <div className="cart-right">
             <div className="summary-box">
               <h4>Order Summary</h4>
+
+              {/* ⭐ NEW — Total Items */}
+              <div className="summary-row">
+                <span>Total Items</span>
+                <span>{cart.totalQuantity}</span>
+              </div>
 
               <div className="summary-row">
                 <span>Shipping</span>
@@ -105,6 +118,7 @@ const Cart = () => {
           <Modal isModelOpen={isModelOpen} setIsModelOpen={setIsModelOpen}>
             <ChangeAdd setAddress={setAddress} setIsModelOpen={setIsModelOpen} />
           </Modal>
+
         </div>
       ) : (
         <div>No items in your cart.</div>
