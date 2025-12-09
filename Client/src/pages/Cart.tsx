@@ -1,15 +1,36 @@
 import { FaTrashAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import '../Style/Cart.css';
+import "../Style/Cart.css";
+import { useState } from "react";
+import Modal from "../components/Modal";
+import ChangeAdd from "../components/ChangeAdd";
+
+// ---- Added Types ----
+interface CartProduct {
+  id: number;
+  title: string;
+  img: string;
+  price: number;
+  quantity: number;
+}
+
+interface CartState {
+  products: CartProduct[];
+  totalPrice: number;
+}
 
 const Cart = () => {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: { cart: CartState }) => state.cart);
+
+  const [isModelOpen, setIsModelOpen] = useState(false);
+
+  // NEW: Address state
+  const [address, setAddress] = useState("Your Address");
 
   return (
     <div className="cart-container">
       {cart?.products?.length > 0 ? (
         <div className="cart-wrapper">
-
           {/* LEFT — PRODUCTS */}
           <div className="cart-left">
             <h3>SHOPPING CART</h3>
@@ -25,7 +46,7 @@ const Cart = () => {
             </div>
 
             <div className="cart-items">
-              {cart.products.map((product) => (
+              {cart.products.map((product: CartProduct) => (
                 <div className="cart-item" key={product.id}>
                   <div className="cart-item-info">
                     <img src={product.img} alt={product.title} />
@@ -62,8 +83,13 @@ const Cart = () => {
               </div>
 
               <div className="summary-address">
-                Shipping to <strong>your address</strong>
-                <button className="change-btn">Change</button>
+                Shipping to <strong>{address}</strong>
+                <button
+                  className="change-btn"
+                  onClick={() => setIsModelOpen(true)}
+                >
+                  Change
+                </button>
               </div>
 
               <div className="summary-total">
@@ -71,12 +97,14 @@ const Cart = () => {
                 <span>${cart.totalPrice.toFixed(2)}</span>
               </div>
 
-              <button className="checkout-btn">
-                Proceed to Checkout
-              </button>
+              <button className="checkout-btn">Proceed to Checkout</button>
             </div>
           </div>
 
+          {/* MODAL */}
+          <Modal isModelOpen={isModelOpen} setIsModelOpen={setIsModelOpen}>
+            <ChangeAdd setAddress={setAddress} setIsModelOpen={setIsModelOpen} />
+          </Modal>
         </div>
       ) : (
         <div>No items in your cart.</div>
