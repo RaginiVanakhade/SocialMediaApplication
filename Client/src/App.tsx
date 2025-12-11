@@ -9,7 +9,7 @@ import { useState } from "react";
 import Order from "./pages/Order";
 
 // Import the Order type from CheckoutPg or define it here
-import { Order as OrderType } from "./pages/CheckoutPg";
+import  type { Order as OrderType } from "./pages/CheckoutPg";
 
 function App() {
   // Type the state as Order | null
