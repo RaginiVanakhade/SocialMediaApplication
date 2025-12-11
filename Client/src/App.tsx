@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import SignInForm from "./auth/SignInForm";
-import SignUpForm from "./auth/SignUpForm";
+// import SignInForm from "./auth/SignInForm";
+// import SignUpForm from "./auth/SignUpForm";
 // import AuthLayout from "./auth/AuthLayout";
 // import RootLayout from "./root/RootLayout";
 
@@ -25,8 +25,8 @@ function App() {
             <Route path="/cart" element={<Cart />} /> 
             <Route path="/checkout" element={<CheckoutPg setOrder={setOrder} />} /> 
             <Route path="/order-confirmation" element={<Order order={order} />} /> 
-          <Route path="/sign-in" element={<SignInForm />} />
-          <Route path="/sign-up" element={<SignUpForm />} />
+          {/* <Route path="/sign-in" element={<SignInForm />} /> */}
+          {/* <Route path="/sign-up" element={<SignUpForm />} /> */}
       </Routes>
       <Footer />
     </main>

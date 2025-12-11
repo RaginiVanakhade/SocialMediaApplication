@@ -2,9 +2,13 @@ import { Link } from "react-router-dom";
 import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
 import "../Style/Navbar.css";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import Modal from "./Modal";
+import SignInForm from "../auth/SignInForm";
 
 const NavBar = () => {
   const products = useSelector((state) => state.cart.products);
+  const [isModelOpen, setIsModelOpen] = useState(false);
 
   return (
     <nav className="navbar">
@@ -25,10 +29,15 @@ const NavBar = () => {
         <div className="user-cart">
           <Link to="/cart" className="cart-icon">
             <FaShoppingCart />
-            {products.length > 0 && <span className="cart-badge">{products.length}</span>}
+            {products.length > 0 && (
+              <span className="cart-badge">{products.length}</span>
+            )}
           </Link>
 
-          <button type="button">Login | Register</button>
+          <button type="button" onClick={() => setIsModelOpen(true)}>
+            Login | Register
+          </button>
+
           <button type="button">
             <FaUser />
           </button>
@@ -41,6 +50,10 @@ const NavBar = () => {
         <Link to="/contact">Contact</Link>
         <Link to="/about">About</Link>
       </div>
+
+      <Modal setIsModelOpen={setIsModelOpen} isModelOpen={isModelOpen}>
+        <SignInForm setIsModelOpen={setIsModelOpen} />
+      </Modal>
     </nav>
   );
 };

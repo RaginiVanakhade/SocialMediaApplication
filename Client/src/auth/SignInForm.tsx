@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Style/SignInForm.css";
-import { useSignInAccount } from "../appwrite/react-query/reactqueryandmutationas"; 
+import { useSignInAccount } from "../appwrite/react-query/reactqueryandmutationas";
 import { useUserContext } from "../context/AuthContext";
-import { AppwriteException } from "appwrite"; // ✅ for proper error typing
+import { AppwriteException } from "appwrite";
+import "../Style/login.css"
 
-const SignInForm = () => {
+const SignInForm = ({ setIsModelOpen }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,33 +16,36 @@ const SignInForm = () => {
 
   const signIn = useSignInAccount();
 
-async function handleSignInForm() {
-  try {
-    setIsSubmitting(true);
+  async function handleSignInForm() {
+    try {
+      setIsSubmitting(true);
 
-    await signIn.mutateAsync({ email, password });
-    await checkAuthUser(); 
+      await signIn.mutateAsync({ email, password });
+      await checkAuthUser();
 
-    // navigate after successful sign-in
-    navigate("/");
-  } catch (error: unknown) {
-    if (error instanceof AppwriteException) {
-      alert(error.message);
-    } else if (error instanceof Error) {
-      alert(error.message);
-    } else {
-      alert("Something went wrong");
+      // ✅ Close the modal after successful login
+      setIsModelOpen(false);
+
+      // Navigate to home
+      navigate("/");
+    } catch (error) {
+      if (error instanceof AppwriteException) {
+        alert(error.message);
+      } else if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Something went wrong");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-  } finally {
-    setIsSubmitting(false);
   }
-}
-
 
   return (
-    <div>
+    <div className="signin-form">
       <h2>Sign In</h2>
       <br />
+
       <input
         type="email"
         placeholder="Email"
@@ -49,6 +53,7 @@ async function handleSignInForm() {
         onChange={(e) => setEmail(e.target.value)}
       />
       <br />
+
       <input
         type="password"
         placeholder="Password"
@@ -56,9 +61,11 @@ async function handleSignInForm() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <br />
+
       <button onClick={handleSignInForm} disabled={isSubmitting || userLoading}>
         {isSubmitting || userLoading ? "Loading..." : "Sign In"}
       </button>
+
       <br />
       <p>
         Don’t have an account? <Link to="/sign-up">Sign Up</Link>
