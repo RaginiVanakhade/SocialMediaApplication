@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import Modal from "./Modal";
 import SignInForm from "../auth/SignInForm";
-import { RootState } from "../redux/Store";
+import type { RootState } from "../redux/Store";
 
 const NavBar = () => {
   const products = useSelector((state: RootState) => state.cart.products);

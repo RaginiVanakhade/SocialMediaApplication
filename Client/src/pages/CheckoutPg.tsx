@@ -1,4 +1,5 @@
-import { useState, ChangeEvent } from 'react';
+import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
