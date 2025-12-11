@@ -1,4 +1,4 @@
-import type { INewUser } from "../../types";
+import type { INewUser } from "../types";
 import { account, avatars, databases, appwriteConfig } from "./config";
 import { ID, Query } from "appwrite";
 

@@ -4,9 +4,14 @@ import "../Style/SignInForm.css";
 import { useSignInAccount } from "../appwrite/react-query/reactqueryandmutationas";
 import { useUserContext } from "../context/AuthContext";
 import { AppwriteException } from "appwrite";
-import "../Style/login.css"
+import "../Style/login.css";
 
-const SignInForm = ({ setIsModelOpen }) => {
+// ---- Type for Props ----
+interface SignInFormProps {
+  setIsModelOpen: (isOpen: boolean) => void;
+}
+
+const SignInForm: React.FC<SignInFormProps> = ({ setIsModelOpen }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,10 +28,10 @@ const SignInForm = ({ setIsModelOpen }) => {
       await signIn.mutateAsync({ email, password });
       await checkAuthUser();
 
-      // ✅ Close the modal after successful login
+      // Close modal
       setIsModelOpen(false);
 
-      // Navigate to home
+      // Redirect home
       navigate("/");
     } catch (error) {
       if (error instanceof AppwriteException) {

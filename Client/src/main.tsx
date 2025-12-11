@@ -1,11 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import App from './App'
 import { BrowserRouter } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext.tsx'
-import { QueryProvider } from './appwrite/react-query/queryProvider.tsx'
+import { AuthProvider } from './context/AuthContext.js'
+import { QueryProvider } from './appwrite/react-query//queryProvider.js'
 import { Provider } from 'react-redux'
-import store from './redux/Store.tsx'
+import store from './redux/Store'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>

@@ -1,4 +1,3 @@
-import React from "react";
 import { FaStar } from "react-icons/fa";
 import "../Style/ProductCart.css";
 import { addToCart } from "../redux/CardSlice";
@@ -20,14 +19,24 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const dispatch = useDispatch();
 
-  // Correctly typed handler
+  // Handler to map Product -> CartProduct shape
   const handleAddToCart = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     product: Product
   ) => {
     e.stopPropagation();
     e.preventDefault();
-    dispatch(addToCart(product));
+
+    const cartItem = {
+      id: product.id,
+      title: product.name,   // map name -> title
+      price: product.price,
+      category: product.category,
+      img: product.image,    // map image -> img
+      rating: product.rating,
+    };
+
+    dispatch(addToCart(cartItem));
     alert("Product Added to cart Successfully!");
   };
 
